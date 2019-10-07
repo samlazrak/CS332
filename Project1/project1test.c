@@ -28,6 +28,20 @@ void listdir(const char *name, int indent)
 }
 
 int main(int argc, char** argv) {
+  int opt;
+
+  while((opt = getopt(argc, argv, ":if:lrx")) != -1) {
+    switch(opt) {
+      case 'f':
+        printf("filename: %s\n", optarg);
+        // add listdir("directory", argument for size, 0)  
+        break;
+      case 's':
+        printf("option s");
+        break;
+    }
+  }
+
   if(argc > 1) {
     listdir(argv[1], 0);
   }
