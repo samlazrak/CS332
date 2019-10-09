@@ -1,3 +1,9 @@
+/*
+Name: Sam Lazrak
+BlazerId: Lazrak13
+Project #: 1
+*/
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -6,42 +12,44 @@
 
 void listdir(const char *name, int indent, const char *options)
 {
-    DIR *dir;
-    struct dirent *entry;
+  DIR *dir;
+  struct dirent *entry;
 
-    if (!(dir = opendir(name)))
-        return;
+  if (!(dir = opendir(name)))
+      return;
 
-    while ((entry = readdir(dir)) != NULL) {
-        if (entry->d_type == DT_DIR) {
-            char path[1024];
-            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-                continue;
-            snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
-            printf("%*s[%s]\n", indent, "", entry->d_name);
-            listdir(path, indent + 2, ".");
-        } else {
-            printf("%*s- %s\n", indent, "", entry->d_name);
-        }
+  while ((entry = readdir(dir)) != NULL) {
+    if (entry->d_type == DT_DIR) {
+        char path[1024];
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+        snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
+        printf("%*s[%s]\n", indent -4, "", entry->d_name);
+        listdir(path, indent, ".");
+    } else {
+        printf("%*s- %s\n", indent, "", entry->d_name);
     }
-    closedir(dir);
+  }
+  closedir(dir);
 }
 
 void listdirf(const char *name, int indent, const char *f){
-  printf("F func\n");
+  printf("F func\n%s\n", f);
+  listdir(".", indent, ".");
   // f is the substring whos file name or dir name contains will be shown
 
 }
 
 void listdirs(const char *name, int indent, const char *s){
-  printf("S func\n");
+  printf("S func\n%s\n", s);
+  listdir(".", indent, ".");
   // s the number to which files will be displayed if they are greater than or equal to s
 
 }
 
 int main(int argc, char** argv) {
   if(argc == 1) {
-    listdir(".", 0, ".");
+    listdir(".", 4, ".");
     return 0;
   }
   int opt;
@@ -53,21 +61,20 @@ int main(int argc, char** argv) {
             printf("argc: %d\n", argc);
             printf("optarg: %s\n", optarg);
             if(argc > 3) {
-              listdirf(argv[1], 0, optarg);
+              listdirf(argv[1], 4, optarg);
             }
             else {
-              listdirf(".", 0, optarg);
+              listdirf(".", 4, optarg);
             }
-            break;
           case 's':
             printf("S\n");
             printf("argc: %d\n", argc);
             printf("optarg: %s\n", optarg);
-            if(argc > 3) {
-              listdirs(argv[1], 0, optarg);
+            if(argc == 5) {
+              listdirs(argv[1], 4, optarg);
             }
             else {
-              listdirs(".", 0, optarg);
+              listdirs(".", 4, optarg);
             }
             break;
         }
@@ -75,7 +82,7 @@ int main(int argc, char** argv) {
       else {
         optind++;
         if(argc == 2) {
-          listdir(argv[1], 0, ".");
+          listdir(argv[1], 4, ".");
         } else {
           printf("ERROR\n");
         }
