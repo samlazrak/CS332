@@ -4,8 +4,6 @@ BlazerId: Lazrak13
 Project #: 1
 */
 
-// Everything except specific folder and options works
-
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -23,17 +21,23 @@ void listdir(const char *name, int indent, const char *options, const char *args
       return;
   
   while ((entry = readdir(dir)) != NULL) {
+    // if entry is not a directory, shouldnt be as this loop is for files in root folder
     if (entry->d_type != DT_DIR) {
+      // if option f
       if (strcmp(options, "f") == 0) {
+        // if entry containts -f args
         if(strstr(entry->d_name, args)) {
           printf("%s\n", entry->d_name);
         }
       } 
+      // if option s
       else if (strcmp(options, "s") == 0) {
+        // if entry has size greater than or equal to -s arg
         if (entry->d_reclen >= atoi(args)) {
           printf("%*s- %s\n", indent, "", entry->d_name);
         }
       } 
+      // if no args
       else {
         printf("%*s- %s\n", indent, "", entry->d_name);
       }
@@ -75,7 +79,7 @@ void listdir(const char *name, int indent, const char *options, const char *args
     }
     // if entry is not a directory 
     else if (entry->d_type != DT_DIR) {
-      // checks if entry is in the root folder and not a sub folder
+      // omits root folder file entries
       if(entry->d_namlen+2 != strlen(path)) {
         // if -f option
         if (strcmp(options, "f") == 0) {
