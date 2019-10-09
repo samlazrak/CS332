@@ -28,11 +28,13 @@ void listdir(const char *name, int indent, const char *options)
 }
 
 void listdirf(const char *name, int indent, const char *f){
+  printf("F func\n");
   // f is the substring whos file name or dir name contains will be shown
 
 }
 
-void listdirs(const char *name, int indent, int s){
+void listdirs(const char *name, int indent, const char *s){
+  printf("S func\n");
   // s the number to which files will be displayed if they are greater than or equal to s
 
 }
@@ -51,15 +53,23 @@ int main(int argc, char** argv) {
             printf("argc: %d\n", argc);
             printf("optarg: %s\n", optarg);
             if(argc > 3) {
-              listdir(argv[1], 0, optarg);
+              listdirf(argv[1], 0, optarg);
             }
             else {
-              listdir(".", 0, optarg);
+              listdirf(".", 0, optarg);
             }
+            break;
           case 's':
             printf("S\n");
             printf("argc: %d\n", argc);
             printf("optarg: %s\n", optarg);
+            if(argc > 3) {
+              listdirs(argv[1], 0, optarg);
+            }
+            else {
+              listdirs(".", 0, optarg);
+            }
+            break;
         }
       }
       else {
