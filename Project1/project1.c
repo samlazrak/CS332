@@ -9,9 +9,9 @@ Project #: 1
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-void listdir(const char *name, int indent, const char *options)
-{
+void listdir(const char *name, int indent, const char *options, const char *args) {
   DIR *dir;
   struct dirent *entry;
 
@@ -20,7 +20,17 @@ void listdir(const char *name, int indent, const char *options)
 
   while ((entry = readdir(dir)) != NULL) {
     if (entry->d_type != DT_DIR) {
-      printf("%*s- %s\n", indent, "", entry->d_name);
+      if (strcmp(options, "f") == 0){
+
+      } 
+      else if (strcmp(options, "s") == 0) {
+        if (entry->d_reclen >= atoi(args)){
+          printf("%*s- %s\n", indent, "", entry->d_name);
+        }
+      } 
+      else {
+        printf("%*s- %s\n", indent, "", entry->d_name);
+      }
     }
   }
 
@@ -33,21 +43,41 @@ void listdir(const char *name, int indent, const char *options)
             continue;
     snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
     if (entry->d_type == DT_DIR) {
+      if (strcmp(options, "f") == 0){
+
+      } 
+      else if (strcmp(options, "s") == 0) {
+        if (entry->d_reclen >= atoi(args)){
+          printf("%*s- %s\n", indent, "", entry->d_name);
+        }
+      } 
+      else {
         printf("%*s[%s]\n", indent -4, "", entry->d_name);
-    } else if (entry->d_type != DT_DIR) {
-      if(entry->d_namlen+2 != strlen(path)){
-        printf("%*s- %s\n", indent, "", entry->d_name);
+      }
+    } 
+    else if (entry->d_type != DT_DIR) {
+      if(entry->d_namlen+2 != strlen(path)) {
+        if (strcmp(options, "f") == 0){
+
+        } 
+        else if (strcmp(options, "s") == 0) {
+          if (entry->d_reclen >= atoi(args)){
+            printf("%*s- %s\n", indent, "", entry->d_name);
+          }
+        } 
+        else {
+            printf("%*s- %s\n", indent, "", entry->d_name);
+        }
+      }
     }
-      
-    }
-    listdir(path, indent, options);
+    listdir(path, indent, options, args);
   }
   closedir(dir);
 }
 
 int main(int argc, char** argv) {
-  if(argc == 1) {
-    listdir(".", 4, ".");
+  if (argc == 1) {
+    listdir(".", 4, ".", ".");
     return 0;
   }
   int opt;
@@ -55,24 +85,18 @@ int main(int argc, char** argv) {
       if ((opt = getopt(argc, argv, "f:s:")) != -1) {
         switch(opt) {
           case 'f':
-            printf("F\n");
-            printf("argc: %d\n", argc);
-            printf("optarg: %s\n", optarg);
-            if(argc > 3) {
-              listdir(argv[1], 4, optarg);
+            if(argc == 3) {
+              listdir(argv[1], 4, "f", optarg);
             }
             else {
-              listdir(".", 4, optarg);
+              listdir(".", 4, "f", optarg);
             }
           case 's':
-            printf("S\n");
-            printf("argc: %d\n", argc);
-            printf("optarg: %s\n", optarg);
             if(argc == 5) {
-              listdir(argv[1], 4, optarg);
+              listdir(argv[1], 4, "s", optarg);
             }
             else {
-              listdir(".", 4, optarg);
+              listdir(".", 4, "s", optarg);
             }
             break;
         }
@@ -80,7 +104,7 @@ int main(int argc, char** argv) {
       else {
         optind++;
         if(argc == 2) {
-          listdir(argv[1], 4, ".");
+          listdir(argv[1], 4, ".", ".");
         } else {
           printf("ERROR\n");
         }
