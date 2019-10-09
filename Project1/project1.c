@@ -17,7 +17,6 @@ void listdir(const char *name, int indent, const char *options)
 
   if (!(dir = opendir(name)))
       return;
- 
 
   while ((entry = readdir(dir)) != NULL) {
     if (entry->d_type != DT_DIR) {
