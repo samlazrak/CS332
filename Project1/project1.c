@@ -1,13 +1,3 @@
-/*  
-  
-  Cited sources:
-
-  https://www.geeksforgeeks.org/getopt-function-in-c-to-parse-command-line-arguments/ 
-
-  https://stackoverflow.com/questions/8436841/how-to-recursively-list-directories-in-c-on-linux
-
-*/
-
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -48,42 +38,38 @@ void listdirs(const char *name, int indent, int s){
 }
 
 int main(int argc, char** argv) {
-  int opt;
-
-  while((opt = getopt(argc, argv, ":if:lrx")) != -1) {
-    switch(opt) {
-      case 'f':
-        printf("argc: %d\n", argc);
-        printf("optarg: %s\n", optarg);
-        // add listdir("directory", argument for size, 0)  
-        if(argc > 3) {
-          listdir(argv[1], 0, optarg);
-        }
-        else {
-          listdir(".", 0, optarg);
-        }
-        break;
-      case 's':
-        printf("argc: %d\n", argc);
-        printf("optarg: %s\n", optarg);
-        // add listdir("directory", argument for size, 0)  
-        if(argc > 3) {
-          listdir(argv[1], 0, optarg);
-        }
-        else {
-          listdir(".", 0, optarg);
-        }
-        break;
-    }
-  }
-
-  if(argc == 2) {
-    printf("argc: %d\n", argc);
-    listdir(argv[1], 0, ".");
-  }
-  else if(argc == 1) {
-    printf("argc: %d\n", argc);
+  if(argc == 1) {
     listdir(".", 0, ".");
+    return 0;
   }
-  return 0;
+  int opt;
+  while (optind < argc) {
+      if ((opt = getopt(argc, argv, "f:s:")) != -1) {
+        switch(opt) {
+          case 'f':
+            printf("F\n");
+            printf("argc: %d\n", argc);
+            printf("optarg: %s\n", optarg);
+            if(argc > 3) {
+              listdir(argv[1], 0, optarg);
+            }
+            else {
+              listdir(".", 0, optarg);
+            }
+          case 's':
+            printf("S\n");
+            printf("argc: %d\n", argc);
+            printf("optarg: %s\n", optarg);
+        }
+      }
+      else {
+        optind++;
+        if(argc == 2) {
+          listdir(argv[1], 0, ".");
+        } else {
+          printf("ERROR\n");
+        }
+      }
+    return 0;
+  }
 }
