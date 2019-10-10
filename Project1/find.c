@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
       else {
         optind++;
         // allows for specific folder call
-        listdir(argv[1], 4, ".", ".");
+        listdir(argv[1], 4, ".", optarg);
       }
     return 0;
   }

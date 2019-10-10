@@ -1,0 +1,14 @@
+Compile: gcc -o find find.c
+
+usage:
+
+./find
+
+./find -s # -f <string>
+
+./find directory/
+
+https://stackoverflow.com/questions/8436841/how-to-recursively-list-directories-in-c-on-linux
+https://www.geeksforgeeks.org/getopt-function-in-c-to-parse-command-line-arguments/
+http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
+
